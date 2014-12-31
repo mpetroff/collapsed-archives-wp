@@ -1,0 +1,45 @@
+/* Prevent accidental highlighting when toggling */
+.collapsed-archives {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Toggles */
+.collapsed-archives > ul {
+    list-style: none !important;
+    margin-left: 0 !important;
+}
+.collapsed-archives ul ul {
+    margin-left: 2.5em !important;
+}
+.collapsed-archives input + label:before {
+    content: '[+]';
+    padding-right: 5px;
+}
+.collapsed-archives-triangles input + label:before {
+    content: '\25b6';
+}
+.collapsed-archives input:checked + label:before {
+    content: '[\2212]';
+}
+.collapsed-archives-triangles input:checked + label:before {
+    content: '\25bc';
+}
+.collapsed-archives input {
+    position: absolute;
+    opacity: 0;
+}
+.collapsed-archives label,
+.collapsed-archives input {
+    cursor: pointer;
+}
+
+/* Toggled content */
+.collapsed-archives input ~ ul {
+    display: none;
+}
+.collapsed-archives input:checked ~ ul {
+    display: block;
+}
