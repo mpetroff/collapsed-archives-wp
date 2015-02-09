@@ -35,6 +35,9 @@
 .collapsed-archives input {
     cursor: pointer;
 }
+.collapsed-archives label {
+    display:inline;
+}
 
 /* Toggled content */
 .collapsed-archives input ~ ul {

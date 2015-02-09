@@ -3,7 +3,7 @@
 Plugin Name: Collapsed Archives
 Plugin URI: https://github.com/mpetroff/collapsed-archives-wp
 Description: Adds a widget to display archive links using purely CSS-based collapsing.
-Version: 1.0
+Version: 1.1
 Author: Matthew Petroff
 Author URI: http://mpetroff.net/
 License: GPLv2 or later
