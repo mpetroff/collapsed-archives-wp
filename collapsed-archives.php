@@ -24,7 +24,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * @return string
  */
 function collapsed_archives_get_collapsed_archives( $args = '' ) {
-    global $wpdb, $wp_locale;
+    global $wpdb, $wp_locale, $wp_query;
 
     $defaults = array(
         'show_post_count' => false,
@@ -75,7 +75,7 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
                 
                 $output .= '<li>';
                 $output .= '<input type="checkbox" id="' . $year_id . '"';
-                if ( ( $result->year == get_the_date('Y') && !is_page() ) || ( is_page() && $result->year == date('Y') ) ) {
+                if ( ( $result->year == get_the_date('Y', $wp_query->post->ID) && !is_page() ) || ( is_page() && $result->year == date('Y') ) ) {
                     $output .= ' checked';
                 }
                 $output .= '>';
