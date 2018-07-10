@@ -2,8 +2,8 @@
 Contributors: petroffm
 Tags: archives, collapsed, collapsing, CSS
 Requires at least: 2.8
-Tested up to: 4.1
-Stable tag: 1.1
+Tested up to: 4.9.7
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,12 @@ This plugin adds a widget to display archive links using purely CSS-based collap
 = Options =
 * Post counts can optionally be displayed next to the archive links
 * Choice of either +/- or arrows to indicate expansion
+* Option to never automatically expand list for current post / year
 * Choice between displaying archive links in reverse chronological order or chronological order
+
+= 1.2 (2018-07-09) =
+* Added option for never automatically expanding list for current post / year
+* Fixed issue with wrong year being expanded
 
 = 1.1 (2015-02-09) =
 * Improved theme support
@@ -52,6 +57,10 @@ If you have already installed this plugin:
 
 
 == Changelog ==
+
+= 1.2 (2018-07-09) =
+* Added option for never automatically expanding list for current post / year
+* Fixed issue with wrong year being expanded
 
 = 1.1 (2015-02-09) =
 * Improved theme support
