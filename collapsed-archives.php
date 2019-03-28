@@ -105,8 +105,8 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
             }
             $output .= get_archives_link( $url, $text, 'html', '', $after );
         }
+        $output .= '</ul></li></ul></div>';
     }
-    $output .= '</ul></li></ul></div>';
     
     return $output;
 } // function get_collapsed_archives
