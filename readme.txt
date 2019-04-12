@@ -3,7 +3,7 @@ Contributors: petroffm
 Tags: archives, collapsed, collapsing, CSS
 Requires at least: 2.8
 Tested up to: 5.1.1
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,9 @@ This plugin adds a widget to display archive links using purely CSS-based collap
 * Choice of either +/- or arrows to indicate expansion
 * Option to never automatically expand list for current post / year
 * Choice between displaying archive links in reverse chronological order or chronological order
+
+= 1.4 (2019-04-12) =
+* Fixed bug for sites without posts
 
 = 1.3 (2019-01-16) =
 * Fixed deprecation warning in PHP 7.2
@@ -60,6 +63,9 @@ If you have already installed this plugin:
 
 
 == Changelog ==
+
+= 1.4 (2019-04-12) =
+* Fixed bug for sites without posts
 
 = 1.3 (2019-01-16) =
 * Fixed deprecation warning in PHP 7.2
