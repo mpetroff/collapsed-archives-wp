@@ -77,11 +77,11 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
                 
                 $output .= '<li>';
                 $output .= '<input type="checkbox" id="' . $year_id . '"';
- 				if ( isset( $wp_query->post->ID ) ) {
-					if ( !$r['never_expand'] && ( ( $result->year == get_the_date('Y', $wp_query->post->ID) && !is_page() ) || ( is_page() && $result->year == date('Y') ) ) ) {
-						$output .= ' checked';
-					}
-				}
+                if ( isset( $wp_query->post->ID ) ) {
+                    if ( !$r['never_expand'] && ( ( $result->year == get_the_date('Y', $wp_query->post->ID) && !is_page() ) || ( is_page() && $result->year == date('Y') ) ) ) {
+                        $output .= ' checked';
+                    }
+                }
                 $output .= '>';
                 $output .= '<label for="' . $year_id . '"></label>';
                 
