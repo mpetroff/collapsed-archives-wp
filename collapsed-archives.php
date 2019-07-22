@@ -21,6 +21,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *     @type bool       $never_expand    Whether to never expand for date (normally expands for current post). Default false.
  *     @type string     $order           Whether to use ascending or descending order. Accepts 'ASC', or 'DESC'.
  *                                       Default 'DESC'.
+ *     @type bool       $include_private Whether to include private posts posted by the login user. Default false.
  * }
  * @return string
  */
@@ -32,6 +33,7 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
         'use_triangles' => false,
         'never_expand' => false,
         'order' => 'DESC',
+        'include_private' => false,
     );
 
     $r = wp_parse_args( $args, $defaults );
@@ -41,7 +43,13 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
         $order = 'DESC';
     }
 
-    $where = apply_filters( 'getarchives_where', "WHERE post_type = 'post' AND post_status = 'publish'", $r );
+    $filter = "WHERE post_type = 'post' AND ";
+    if ( $r['include_private'] ) {
+        $filter .= "(post_status = 'publish' OR post_status = 'private' AND post_author = " . get_current_user_id() . ")";
+    } else {
+        $filter .= "post_status = 'publish'";
+    }
+    $where = apply_filters( 'getarchives_where', $filter, $r );
     $join = apply_filters( 'getarchives_join', '', $r );
 
     $output = '';
@@ -133,22 +141,24 @@ class Collapsed_Archives_Widget extends WP_Widget {
         $use_triangles = ! empty( $instance['use_triangles'] ) ? '1' : '0';
         $never_expand = ! empty( $instance['never_expand'] ) ? '1' : '0';
         $order = ! empty( $instance['asc_order'] ) ? 'ASC' : 'DESC';
+        $include_private = ! empty( $instance['include_private'] ) ? '1' : '0';
         
         echo $args['before_widget'];
         if ( $title ) {
             echo $args['before_title'] . $title . $args['after_title'];
         }
-        echo collapsed_archives_get_collapsed_archives( array( 'show_post_count' => $count, 'use_triangles' => $use_triangles, 'never_expand' => $never_expand, 'order' => $order ) );
+        echo collapsed_archives_get_collapsed_archives( array( 'show_post_count' => $count, 'use_triangles' => $use_triangles, 'never_expand' => $never_expand, 'order' => $order, 'include_private' => $include_private ) );
         echo $args['after_widget'];
     }
 
     public function form( $instance ) {
-        $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'count' => 0, 'use_triangles' => 0, 'never_expand' => 0, 'asc_order' => 0 ) );
+        $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'count' => 0, 'use_triangles' => 0, 'never_expand' => 0, 'asc_order' => 0, 'include_private' => 0 ) );
         $title = strip_tags($instance['title']);
         $count = $instance['count'] ? 'checked="checked"' : '';
         $use_triangles = $instance['use_triangles'] ? 'checked="checked"' : '';
         $never_expand = $instance['never_expand'] ? 'checked="checked"' : '';
         $asc_order = $instance['asc_order'] ? 'checked="checked"' : '';
+        $include_private = $instance['include_private'] ? 'checked="checked"' : '';
         ?>
         <p>
         <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
@@ -161,18 +171,21 @@ class Collapsed_Archives_Widget extends WP_Widget {
         <input class="checkbox" type="checkbox" <?php echo $never_expand; ?> id="<?php echo $this->get_field_id('never_expand'); ?>" name="<?php echo $this->get_field_name('never_expand'); ?>" /> <label for="<?php echo $this->get_field_id('never_expand'); ?>"><?php _e('Don\'t expand list for current post / year.'); ?></label>
         <br/>
         <input class="checkbox" type="checkbox" <?php echo $asc_order; ?> id="<?php echo $this->get_field_id('asc_order'); ?>" name="<?php echo $this->get_field_name('asc_order'); ?>" /> <label for="<?php echo $this->get_field_id('asc_order'); ?>"><?php _e('Display archives in chronological order instead of reverse chronological order.'); ?></label>
+        <br/>
+        <input class="checkbox" type="checkbox" <?php echo $include_private; ?> id="<?php echo $this->get_field_id('include_private'); ?>" name="<?php echo $this->get_field_name('include_private'); ?>" /> <label for="<?php echo $this->get_field_id('include_private'); ?>"><?php _e('Include private posts posted by the login user.'); ?></label>
         </p>
         <?php 
     }
 
     public function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
-        $new_instance = wp_parse_args( (array) $new_instance, array( 'title' => '', 'count' => 0, 'use_triangles' => 0, 'never_expand' => 0, 'asc_order' => 0 ) );
+        $new_instance = wp_parse_args( (array) $new_instance, array( 'title' => '', 'count' => 0, 'use_triangles' => 0, 'never_expand' => 0, 'asc_order' => 0, 'include_private' => 0 ) );
         $instance['title'] = strip_tags($new_instance['title']);
         $instance['count'] = $new_instance['count'] ? 1 : 0;
         $instance['use_triangles'] = $new_instance['use_triangles'] ? 1 : 0;
         $instance['never_expand'] = $new_instance['never_expand'] ? 1 : 0;
         $instance['asc_order'] = $new_instance['asc_order'] ? 1 : 0;
+        $instance['include_private'] = $new_instance['include_private'] ? 1 : 0;
         
         return $instance;
     }
