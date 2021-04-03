@@ -11,6 +11,10 @@
     list-style: none !important;
     margin-left: 0 !important;
 }
+.collapsed-archives > ul > li > .decade {
+    list-style: none !important;
+    margin-left: 1.25em !important;
+}
 .collapsed-archives ul ul {
     margin-left: 2.5em !important;
 }

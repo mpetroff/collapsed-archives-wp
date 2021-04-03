@@ -73,7 +73,7 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
         foreach ( (array) $results as $result ) {
             if ( $r['use_decades'] && $prev_decade != $result->decade ) {
                 if ( $prev_decade !== false ) {
-                    $output .= '</ul class="year"></li></ul class="decade"></li>';
+                    $output .= '</ul></li></ul></li>';
                     $prev_year = false; // this is so that the year output does not append extra </ul></li> below
                 }
 
@@ -89,9 +89,6 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
                 $output .= '>';
                 $output .= '<label for="' . $decade_id . '"></label>';
 
-                // $url = get_decade_link( $result->decade );
-                //$url = "#";
-                $url = '/?decade='.$result->decade;
                 $after = '';
                 if ( $r['show_post_count'] ) {
                     $decade_args = array(
@@ -115,7 +112,7 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
                     $decade_query = new WP_Query( $decade_args );
                     $after = '&nbsp;(' . $decade_query->found_posts . ')';
                 }
-                $output .= get_archives_link( $url, $result->decade . '\'s', '', '', $after );
+                $output .= $result->decade . 's' . $after;
 
                 $output .= '<ul class="decade">';
 
@@ -124,7 +121,7 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
 
             if ( $prev_year != $result->year ) {
                 if ( $prev_year !== false ) {
-                    $output .= '</ul class="year"></li>';
+                    $output .= '</ul></li>';
                 }
 
                 $year_id = 'archive-year-' . $result->year;
@@ -161,7 +158,10 @@ function collapsed_archives_get_collapsed_archives( $args = '' ) {
             }
             $output .= get_archives_link( $url, $text, 'html', '', $after );
         }
-        $output .= '</ul></li></ul></li></ul></div>';
+        if ( $r['use_decades'] ) {
+            $output .= '</ul></li>';
+        }
+        $output .= '</ul></li></ul></div>';
     }
 
     return $output;
@@ -193,7 +193,7 @@ class Collapsed_Archives_Widget extends WP_Widget {
         if ( $title ) {
             echo $args['before_title'] . $title . $args['after_title'];
         }
-        echo collapsed_archives_get_collapsed_archives( array( 'show_post_count' => $count, 'use_triangles' => $use_triangles, 'use_decades' => $use_decades,'never_expand' => $never_expand, 'order' => $order ) );
+        echo collapsed_archives_get_collapsed_archives( array( 'show_post_count' => $count, 'use_triangles' => $use_triangles, 'use_decades' => $use_decades, 'never_expand' => $never_expand, 'order' => $order ) );
         echo $args['after_widget'];
     }
 
@@ -255,41 +255,4 @@ function collapsed_archives_stylesheet() {
 }
 add_action( 'wp_enqueue_scripts', 'collapsed_archives_stylesheet' );
 
-// Add decade to the query args
-function collapsed_archives_query_vars($vars) {
-    $vars[] = 'decade';
-    return $vars;
-}
-add_filter( 'query_vars', 'collapsed_archives_query_vars' );
-
-// Check for decade query var
-function collapsed_archives_decade_filter( $query ) {
-    if ( $query->is_main_query() ){
-        $decade = get_query_var( 'decade' );
-        if( !empty($decade) ){
-            $start = $decade.'-01-01';
-            $end = ($decade+9).'-12-31';
-            $query->set('year', '');
-            $query->set( 'date_query',
-                array (
-                    'after'     => $start,
-                    'before'	=> $end,
-                    'inclusive' => true,
-                )
-            );
-        }
-    }
-}
-add_filter( 'pre_get_posts', 'collapsed_archives_decade_filter' );
-
-// Modify the title
-function collapsed_archives_decade_title($title) {
-    $decade = get_query_var( 'decade' );
-    if(!empty($decade)){
-        $title = __('The').' '.$decade.'\'s';
-        apply_filters( 'get_the_archive_title_prefix', 'decade' );
-    }
-    return $title;
-}
-add_filter( 'get_the_archive_title', 'collapsed_archives_decade_title' );
 ?>
